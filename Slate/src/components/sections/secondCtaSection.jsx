@@ -12,7 +12,7 @@ function secondCtaSection() {
           <p className="mb-7 text-2xl">
             Every note matters—start where you are.
           </p>
-          <Link to="/login">
+          <Link to="/signup">
             <Button size="xxl" textSize="lg">
               Create Your First Notebook
             </Button>

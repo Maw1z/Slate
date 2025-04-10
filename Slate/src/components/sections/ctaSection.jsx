@@ -14,7 +14,7 @@ function ctaSection() {
             Ditch the distractions - our app offers a clean, <br /> streamlined
             space for pure note-taking.
           </h4>
-          <Link to="/login">
+          <Link to="/signup">
             <Button size="xxl" textSize="lg">
               Get Started
             </Button>
