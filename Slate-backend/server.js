@@ -13,6 +13,6 @@ app.use(express.json());
 app.use("/api/notebooks", notebookRoutes);
 app.use("/api/notes", noteRoutes);
 
-app.listen(6000, () => {
-  console.log("server has started on port 6000");
+app.listen(8080, () => {
+  console.log("server has started on port 8080");
 });

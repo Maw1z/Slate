@@ -1,0 +1,49 @@
+import { useState, useEffect } from "react";
+import axios from "axios";
+import addIcon from "../../assets/icons/add.svg";
+import { Skeleton } from "@/components/ui/skeleton";
+
+function NotesBar({ visibility, selectedNotebook }) {
+  const [notes, setNotes] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    if (!selectedNotebook) return;
+
+    const fetchNotes = async () => {
+      try {
+        const res = await axios.get(
+          `http://localhost:8080/api/notes/notebooks/${selectedNotebook}/`,
+        );
+        setNotes(res.data.note);
+        setLoading(false);
+      } catch (error) {
+        console.log("Error fetching notes:", error.message);
+      }
+    };
+    fetchNotes();
+  }, [selectedNotebook]);
+
+  return (
+    <>
+      {visibility && (
+        <div className="bg-background font-Grotesk scrollbar-thumb-rounded-full scrollbar-track-rounded-full scrollbar-thumb-black scrollbar-thin scrollbar-track-background h-full w-44 overflow-y-auto border-r border-[#a3abbd]">
+          <div className="hover:bg-main flex h-14 w-full items-center justify-center gap-1 border-b border-[#a3abbd] bg-white font-semibold">
+            <img src={addIcon} alt="Plus" className="w-6" />
+            Add Note
+          </div>
+          {notes.map((note) => (
+            <button
+              key={note.noteid}
+              className="hover:bg-main focus:bg-main flex h-14 w-full items-center rounded-none border-b border-[#a3abbd] bg-white px-5 focus:border-2 focus:border-black focus:font-bold"
+            >
+              {loading ? <Skeleton className="h-4 w-36" /> : note.notename}
+            </button>
+          ))}
+        </div>
+      )}
+    </>
+  );
+}
+
+export default NotesBar;
