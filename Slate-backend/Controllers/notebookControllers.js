@@ -2,8 +2,6 @@ const pool = require(".././db");
 
 // POST - Create notebook
 const createNotebook = async (req, res) => {
-  const client = await pool.connect();
-
   try {
     const { NotebookID, UserID, notebookName } = req.body;
 
@@ -11,26 +9,33 @@ const createNotebook = async (req, res) => {
       "INSERT INTO Notebooks (NotebookID, UserID, notebookName) VALUES($1, $2, $3) RETURNING *",
       [NotebookID, UserID, notebookName]
     );
-    res.json(newNotebook.rows[0]);
+    res.status(201).json({
+      message: "Notebook created successfully",
+      notebook: newNotebook.rows[0],
+    });
   } catch (error) {
     console.log(error.message);
+    res.status(500).json({ message: "Server error" });
   }
 };
 
 // GET - Get all notebooks
 const getAllNotebook = async (req, res) => {
-  const client = await pool.connect();
-
   try {
-    const result = await client.query("SELECT * FROM Notebooks");
+    const notebooks = await pool.query("SELECT * FROM Notebooks");
 
-    res.json(result.rows);
+    if (notebooks.rows.length === 0) {
+      return res.status(404).json({ message: "No notebooks found" });
+    }
+
+    res.status(200).json({
+      message: "All notebooks retrieved successfully",
+      notebook: notebooks.rows,
+    });
   } catch (error) {
     console.log(error);
-  } finally {
-    client.release();
+    res.status(500).json({ message: "Server error" });
   }
-  res.status(404);
 };
 
 // GET - Get notebook from id
@@ -42,9 +47,17 @@ const getNotebook = async (req, res) => {
       "SELECT * FROM Notebooks WHERE notebookid = $1",
       [notebookID]
     );
-    res.json(notebook.rows[0]);
+
+    if (notebook.rows.length === 0) {
+      return res.status(404).json({ message: "Notebook not found" });
+    }
+    res.status(200).json({
+      message: "Notebook retrieved successfully",
+      notebook: notebook.rows[0],
+    });
   } catch (error) {
     console.log(error.message);
+    res.status(500).json({ message: "Server error" });
   }
 };
 
@@ -55,13 +68,18 @@ const updateNotebook = async (req, res) => {
     const { notebookname } = req.body;
 
     const updateNotebook = await pool.query(
-      "UPDATE Notebooks SET notebookname = $1 WHERE notebookid = $2",
+      "UPDATE Notebooks SET notebookname = $1 WHERE notebookid = $2 RETURNING *",
       [notebookname, notebookID]
     );
 
-    res.json("Notebook was updated");
+    if (updateNotebook.rows.length === 0) {
+      return res.status(404).json({ message: "Notebook not found" });
+    }
+
+    res.sendStatus(204);
   } catch (error) {
     console.log(error.message);
+    res.status(500).json({ message: "Server error" });
   }
 };
 
@@ -71,13 +89,18 @@ const deleteNotebook = async (req, res) => {
     const { notebookID } = req.params;
 
     const deletedNotebook = await pool.query(
-      "DELETE FROM Notebooks WHERE notebookid = $1",
+      "DELETE FROM Notebooks WHERE notebookid = $1 RETURNING *",
       [notebookID]
     );
 
-    res.json("Notebook was deleted");
+    if (deletedNotebook.rows.length === 0) {
+      return res.status(404).json({ message: "Notebook not found" });
+    }
+
+    res.sendStatus(204);
   } catch (error) {
     console.log(error.message);
+    res.status(500).json({ message: "Server error" });
   }
 };
 

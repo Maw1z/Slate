@@ -9,7 +9,7 @@ const {
 } = require("../Controllers/noteControllers");
 
 // POST - Create note
-router.get("/notebooks/:notebookID", createNote);
+router.post("/notebooks/:notebookID", createNote);
 
 // GET - Get all note
 router.get("/notebooks/:notebookID", getAllNote);
@@ -21,6 +21,6 @@ router.get("/notebooks/:notebookID/:noteID", getNote);
 router.put("/notebooks/:notebookID/:noteID", updateNote);
 
 // DELETE - Delete note
-router.delete("/notesbooks/:notebookID/:noteID", deleteNote);
+router.delete("/notebooks/:notebookID/:noteID", deleteNote);
 
 module.exports = router;

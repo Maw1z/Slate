@@ -11,7 +11,7 @@ app.use(express.json());
 
 // routes for notebook
 app.use("/api/notebooks", notebookRoutes);
-app.use("/api/", noteRoutes);
+app.use("/api/notes", noteRoutes);
 
 app.listen(6000, () => {
   console.log("server has started on port 6000");
