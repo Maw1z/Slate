@@ -13,6 +13,19 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+import deleteIcon from "../../assets/icons/delete.svg";
+import editIcon from "../../assets/icons/edit.svg";
 
 function UtilBar({ handleUpdate, notebookID }) {
   const [toUpdateNotebook, setToUpdateNotebook] = useState({});
@@ -56,12 +69,28 @@ function UtilBar({ handleUpdate, notebookID }) {
     fetchSpecificNotebook();
   }, [notebookID]);
 
+  const handleDelete = async () => {
+    try {
+      const res = await axios.delete(
+        `http://localhost:8080/api/notebooks/${notebookID}`,
+      );
+      console.log("Notebook deleted:", res.data);
+      handleUpdate({ message: "Notebook has been deleted" });
+    } catch (error) {
+      console.error("Error deleting notebook:", error.message);
+      handleUpdate({
+        message: "Error deleting notebook",
+        error: error.message,
+      });
+    }
+  };
+
   return (
-    <div className="z-10 flex h-12 w-[100vw] flex-col items-center justify-center border-x border-b border-[#a3abbd] bg-white">
+    <div className="z-10 flex h-12 w-[100vw] items-center justify-center border-x border-b border-[#a3abbd] bg-white">
       <Dialog>
         <DialogTrigger asChild>
           <Button variant="noShadow" size="sm">
-            Edit Notebook
+            <img src={editIcon} alt="Edit icon" className="h-5 w-5" />
           </Button>
         </DialogTrigger>
         <DialogContent className="sm:max-w-[425px]">
@@ -73,7 +102,7 @@ function UtilBar({ handleUpdate, notebookID }) {
                 done.
               </DialogDescription>
             </DialogHeader>
-            <div className="grid gap-4">
+            <div className="mb-3 grid gap-4">
               <div className="grid gap-3">
                 <Label htmlFor="name-1">New Notebook Name</Label>
                 <Input
@@ -95,6 +124,28 @@ function UtilBar({ handleUpdate, notebookID }) {
           </form>
         </DialogContent>
       </Dialog>
+      <AlertDialog>
+        <AlertDialogTrigger asChild>
+          <Button variant="destructivenoShadow" size="sm">
+            <img src={deleteIcon} alt="Delete icon" className="h-5 w-5" />
+          </Button>
+        </AlertDialogTrigger>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+            <AlertDialogDescription>
+              This action cannot be undone. This will permanently delete your
+              notebook and remove your data from our servers.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={handleDelete}>
+              Continue
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }

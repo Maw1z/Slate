@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import Header from "./Header";
 import Sidebar from "./sections/sidebar";
 import { toast } from "sonner";
-import { Button } from "@/components/ui/button";
 import UtilBar from "./sections/utilBar";
 
 function Notes() {

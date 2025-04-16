@@ -1,19 +1,25 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
-import addIcon from "../../assets/icons/add.svg";
+import { v4 as uuidv4 } from "uuid";
 import { Skeleton } from "@/components/ui/skeleton";
+import addIcon from "../../assets/icons/add.svg";
 
-function NotesBar({ visibility, selectedNotebook }) {
+function NotesBar({ visibility, selectedNotebookId, handleUpdate }) {
   const [notes, setNotes] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  const generateUUID = () => {
+    const newUUID = uuidv4();
+    return newUUID;
+  };
+
   useEffect(() => {
-    if (!selectedNotebook) return;
+    if (!selectedNotebookId) return;
 
     const fetchNotes = async () => {
       try {
         const res = await axios.get(
-          `http://localhost:8080/api/notes/notebooks/${selectedNotebook}/`,
+          `http://localhost:8080/api/notes/notebooks/${selectedNotebookId}/`,
         );
         setNotes(res.data.note);
         setLoading(false);
@@ -22,20 +28,42 @@ function NotesBar({ visibility, selectedNotebook }) {
       }
     };
     fetchNotes();
-  }, [selectedNotebook]);
+  }, [selectedNotebookId]);
+
+  const handleAddNote = async () => {
+    try {
+      const res = await axios.post(
+        `http://localhost:8080/api/notes/notebooks/${selectedNotebookId}`,
+        {
+          NoteID: generateUUID(),
+        },
+      );
+      console.log("Note created:", res.data);
+      handleUpdate({ message: "Note created!" });
+    } catch (error) {
+      console.error("Error creating note:", error.message);
+      handleUpdate({
+        message: "Error creating note",
+        error: error.message,
+      });
+    }
+  };
 
   return (
     <>
       {visibility && (
         <div className="bg-background font-Grotesk scrollbar-thumb-rounded-full scrollbar-track-rounded-full scrollbar-thumb-black scrollbar-thin scrollbar-track-background h-full w-44 overflow-y-auto border-r border-[#a3abbd]">
-          <div className="hover:bg-main flex h-14 w-full items-center justify-center gap-1 border-b border-[#a3abbd] bg-white font-semibold">
+          <div
+            className="hover:bg-main flex h-14 w-full items-center justify-center gap-1 border-b border-[#a3abbd] bg-white font-semibold hover:cursor-pointer"
+            onClick={handleAddNote}
+          >
             <img src={addIcon} alt="Plus" className="w-6" />
             Add Note
           </div>
           {notes.map((note) => (
             <button
               key={note.noteid}
-              className="hover:bg-main focus:bg-main flex h-14 w-full items-center rounded-none border-b border-[#a3abbd] bg-white px-5 focus:border-2 focus:border-black focus:font-bold"
+              className="hover:bg-main focus:bg-main flex h-14 w-full items-center rounded-none border-b border-[#a3abbd] bg-white px-5 hover:cursor-pointer focus:border-2 focus:border-black focus:font-bold"
             >
               {loading ? <Skeleton className="h-4 w-36" /> : note.notename}
             </button>

@@ -8,8 +8,10 @@ import booksClosedIcon from "../../assets/icons/books-closed.svg";
 function Sidebar({
   loadStatus,
   handleLoad,
-  selectedNotebook,
+  selectedNotebookId,
   setSelectedNotebookId,
+  update,
+  handleUpdate,
 }) {
   const [sidebarOpened, setSideBarOpened] = useState(true);
   const [notebooks, setNotebooks] = useState([]);
@@ -33,7 +35,7 @@ function Sidebar({
       }
     };
     fetchNotebooks();
-  }, []);
+  }, [update]);
 
   return (
     <section className="flex flex-1">
@@ -54,10 +56,12 @@ function Sidebar({
         loading={loadStatus}
         notebooks={notebooks}
         onSelectNotebook={setSelectedNotebookId}
+        handleUpdate={handleUpdate}
       />
       <NotesBar
         visibility={sidebarOpened}
-        selectedNotebook={selectedNotebook}
+        selectedNotebookId={selectedNotebookId}
+        handleUpdate={handleUpdate}
       />
     </section>
   );
