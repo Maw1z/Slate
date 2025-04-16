@@ -21,6 +21,7 @@ function NotebooksBar({
   visibility,
   loading,
   notebooks,
+  selectedNotebookId,
   onSelectNotebook,
   handleUpdate,
 }) {
@@ -97,15 +98,23 @@ function NotebooksBar({
             </DialogContent>
           </Dialog>
 
-          {notebooks.map((book) => (
-            <button
-              key={book.notebookid}
-              className="hover:bg-main focus:bg-main flex h-14 w-full items-center rounded-none border-b border-[#a3abbd] bg-white px-5 hover:cursor-pointer focus:border-2 focus:border-black focus:font-bold"
-              onClick={() => onSelectNotebook(book.notebookid)}
-            >
-              {loading ? <Skeleton className="h-4 w-36" /> : book.notebookname}
-            </button>
-          ))}
+          {notebooks.map((book) => {
+            const isSelected = selectedNotebookId === book.notebookid;
+
+            return (
+              <button
+                key={book.notebookid}
+                className={`hover:bg-main flex h-14 w-full items-center rounded-none border-b border-[#a3abbd] px-5 hover:cursor-pointer ${isSelected ? "bg-main rounded-xs border-2 border-b-2 border-black border-b-black text-lg font-bold" : "bg-white"} `}
+                onClick={() => onSelectNotebook(book.notebookid)}
+              >
+                {loading ? (
+                  <Skeleton className="h-4 w-36" />
+                ) : (
+                  book.notebookname
+                )}
+              </button>
+            );
+          })}
         </div>
       )}
     </>

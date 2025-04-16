@@ -38,12 +38,17 @@ function Notes() {
         <UtilBar handleUpdate={setUpdates} notebookID={selectedNotebookId} />
       )}
       <div className="flex flex-1 self-start overflow-hidden">
-        <Sidebar
-          loadStatus={loading}
-          handleLoad={setLoading}
-          selectedNotebook={selectedNotebookId}
-          setSelectedNotebookId={handleNotebookSelect}
-        />
+        <div className="flex h-full w-screen flex-1">
+          <Sidebar
+            loadStatus={loading}
+            handleLoad={setLoading}
+            selectedNotebookId={selectedNotebookId}
+            setSelectedNotebookId={handleNotebookSelect}
+            update={updates}
+            handleUpdate={setUpdates}
+          />
+          <div className="h-full w-full bg-red-400"></div>
+        </div>
       </div>
     </div>
   );

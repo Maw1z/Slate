@@ -55,6 +55,7 @@ function Sidebar({
         visibility={sidebarOpened}
         loading={loadStatus}
         notebooks={notebooks}
+        selectedNotebookId={selectedNotebookId}
         onSelectNotebook={setSelectedNotebookId}
         handleUpdate={handleUpdate}
       />
