@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { v4 as uuidv4 } from "uuid";
 import axios from "axios";
 import { Button } from "@/components/ui/button";
@@ -14,8 +14,21 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import { Skeleton } from "@/components/ui/skeleton";
 import addIcon from "../../assets/icons/add.svg";
+import deleteIcon from "../../assets/icons/delete.svg";
+import editIcon from "../../assets/icons/edit.svg";
 
 function NotebooksBar({
   visibility,
@@ -26,6 +39,8 @@ function NotebooksBar({
   handleUpdate,
 }) {
   const [newNotebookName, setNewNotebookName] = useState(null);
+  const [toUpdateNotebook, setToUpdateNotebook] = useState({});
+  const [updatedNotebookName, setUpdatedNotebookName] = useState("");
 
   const generateUUID = () => {
     const newUUID = uuidv4();
@@ -35,6 +50,26 @@ function NotebooksBar({
   const handleNewNotebookName = (e) => {
     setNewNotebookName(e.target.value);
   };
+
+  const handleNotebookNameChange = (e) => {
+    setUpdatedNotebookName(e.target.value);
+  };
+
+  useEffect(() => {
+    if (!selectedNotebookId) return;
+
+    const fetchSpecificNotebook = async () => {
+      try {
+        const res = await axios.get(
+          `http://localhost:8080/api/notebooks/${selectedNotebookId}`,
+        );
+        setToUpdateNotebook(res.data.notebook);
+      } catch (error) {
+        console.log("Error fetching notebook", error.message);
+      }
+    };
+    fetchSpecificNotebook();
+  }, [selectedNotebookId]);
 
   const handleAddNotebook = async () => {
     try {
@@ -55,10 +90,46 @@ function NotebooksBar({
     }
   };
 
+  const handleNotebookUpdate = async (e) => {
+    e.preventDefault();
+    try {
+      const res = await axios.put(
+        `http://localhost:8080/api/notebooks/${selectedNotebookId}`,
+        {
+          notebookname: updatedNotebookName,
+        },
+      );
+      console.log("Notebook updated:", res.data);
+      handleUpdate({ message: "Notebook name updated!" });
+    } catch (error) {
+      console.error("Error updating notebook:", error.message);
+      handleUpdate({
+        message: "Error updating notebook",
+        error: error.message,
+      });
+    }
+  };
+
+  const handleDelete = async () => {
+    try {
+      const res = await axios.delete(
+        `http://localhost:8080/api/notebooks/${selectedNotebookId}`,
+      );
+      console.log("Notebook deleted:", res.data);
+      handleUpdate({ message: "Notebook has been deleted" });
+    } catch (error) {
+      console.error("Error deleting notebook:", error.message);
+      handleUpdate({
+        message: "Error deleting notebook",
+        error: error.message,
+      });
+    }
+  };
+
   return (
     <>
       {visibility && (
-        <div className="bg-background font-Grotesk scrollbar-thumb-rounded-full scrollbar-track-rounded-full scrollbar-thumb-black scrollbar-thin scrollbar-track-background h-full w-44 overflow-y-auto border-r border-[#a3abbd]">
+        <div className="bg-background font-Grotesk scrollbar-thumb-rounded-full scrollbar-track-rounded-full scrollbar-thumb-black scrollbar-thin scrollbar-track-background flex h-full w-44 flex-col items-center overflow-y-auto border-r border-[#a3abbd]">
           <Dialog>
             <DialogTrigger asChild>
               <div className="hover:bg-main flex h-14 w-full items-center justify-center gap-1 border-b border-[#a3abbd] bg-white font-semibold hover:cursor-pointer">
@@ -115,6 +186,67 @@ function NotebooksBar({
               </button>
             );
           })}
+          <div className="mt-auto flex h-14 w-full items-center justify-evenly border-t border-[#a3abbd] bg-white">
+            <Dialog>
+              <DialogTrigger asChild>
+                <Button variant="noShadow">
+                  <img src={editIcon} alt="Edit icon" className="h-5 w-5" />
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="sm:max-w-[425px]">
+                <form onSubmit={handleNotebookUpdate}>
+                  <DialogHeader>
+                    <DialogTitle>Edit Notebook</DialogTitle>
+                    <DialogDescription>
+                      Make changes to your notebook here. Click save when
+                      you&apos;re done.
+                    </DialogDescription>
+                  </DialogHeader>
+                  <div className="mb-3 grid gap-4">
+                    <div className="grid gap-3">
+                      <Label htmlFor="name-1">New Notebook Name</Label>
+                      <Input
+                        id="name-1"
+                        name="name"
+                        type="name"
+                        defaultValue={toUpdateNotebook.notebookname}
+                        onChange={handleNotebookNameChange}
+                        required
+                      />
+                    </div>
+                  </div>
+                  <DialogFooter>
+                    <DialogClose asChild>
+                      <Button variant="neutral">Cancel</Button>
+                    </DialogClose>
+                    <Button type="submit">Save changes</Button>
+                  </DialogFooter>
+                </form>
+              </DialogContent>
+            </Dialog>
+            <AlertDialog>
+              <AlertDialogTrigger asChild>
+                <Button variant="destructivenoShadow">
+                  <img src={deleteIcon} alt="Delete icon" className="h-6 w-6" />
+                </Button>
+              </AlertDialogTrigger>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                  <AlertDialogDescription>
+                    This action cannot be undone. This will permanently delete
+                    your notebook and remove your data from our servers.
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel>Cancel</AlertDialogCancel>
+                  <AlertDialogAction onClick={handleDelete}>
+                    Continue
+                  </AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
+          </div>
         </div>
       )}
     </>

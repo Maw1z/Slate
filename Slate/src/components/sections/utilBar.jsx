@@ -1,16 +1,4 @@
-import { useState, useEffect } from "react";
-import axios from "axios";
 import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogClose,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
@@ -24,128 +12,109 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import {
+  Sheet,
+  SheetClose,
+  SheetContent,
+  SheetDescription,
+  SheetFooter,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
+
 import deleteIcon from "../../assets/icons/delete.svg";
-import editIcon from "../../assets/icons/edit.svg";
+import saveIcon from "../../assets/icons/save.svg";
+import summarisationIcon from "../../assets/icons/summarise.svg";
 
-function UtilBar({ handleUpdate, notebookID }) {
-  const [toUpdateNotebook, setToUpdateNotebook] = useState({});
-  const [updatedNotebookName, setUpdatedNotebookName] = useState("");
-
-  const handleNotebookNameChange = (e) => {
-    setUpdatedNotebookName(e.target.value);
-  };
-
-  const handleNotebookUpdate = async (e) => {
-    e.preventDefault();
-    try {
-      const res = await axios.put(
-        `http://localhost:8080/api/notebooks/${notebookID}`,
-        {
-          notebookname: updatedNotebookName,
-        },
-      );
-      console.log("Notebook updated:", res.data);
-      handleUpdate({ message: "Notebook name updated!" });
-    } catch (error) {
-      console.error("Error updating notebook:", error.message);
-      handleUpdate({
-        message: "Error updating notebook",
-        error: error.message,
-      });
-    }
-  };
-
-  useEffect(() => {
-    const fetchSpecificNotebook = async () => {
-      try {
-        const res = await axios.get(
-          `http://localhost:8080/api/notebooks/${notebookID}`,
-        );
-        setToUpdateNotebook(res.data.notebook);
-      } catch (error) {
-        console.log("Error fetching notebook", error.message);
-      }
-    };
-    fetchSpecificNotebook();
-  }, [notebookID]);
-
-  const handleDelete = async () => {
-    try {
-      const res = await axios.delete(
-        `http://localhost:8080/api/notebooks/${notebookID}`,
-      );
-      console.log("Notebook deleted:", res.data);
-      handleUpdate({ message: "Notebook has been deleted" });
-    } catch (error) {
-      console.error("Error deleting notebook:", error.message);
-      handleUpdate({
-        message: "Error deleting notebook",
-        error: error.message,
-      });
-    }
-  };
-
+function UtilBar({ noteName, handleSave, handleDelete, setNewName }) {
   return (
-    <div className="z-10 flex h-14 w-[100vw] items-center justify-center gap-2 border-x border-b border-[#a3abbd] bg-white">
-      <Dialog>
-        <DialogTrigger asChild>
-          <Button variant="noShadow" size="sm">
-            <img src={editIcon} alt="Edit icon" className="h-5 w-5" />
-          </Button>
-        </DialogTrigger>
-        <DialogContent className="sm:max-w-[425px]">
-          <form onSubmit={handleNotebookUpdate}>
-            <DialogHeader>
-              <DialogTitle>Edit Notebook</DialogTitle>
-              <DialogDescription>
-                Make changes to your notebook here. Click save when you&apos;re
+    <div className="z-10 flex h-14 w-full items-center justify-between gap-2 border-x border-b border-[#a3abbd] bg-white px-2">
+      <div>
+        <Input
+          className="w-[200px]"
+          type="name"
+          value={noteName}
+          onChange={setNewName}
+        />
+      </div>
+
+      <div className="flex gap-2">
+        <Button variant="noShadow" size="sm" className="hover:cursor-pointer">
+          <img
+            src={saveIcon}
+            alt="Delete icon"
+            className="h-5 w-5"
+            onClick={handleSave}
+          />
+        </Button>
+        <AlertDialog>
+          <AlertDialogTrigger asChild>
+            <Button
+              variant="destructivenoShadow"
+              size="sm"
+              className="hover:cursor-pointer"
+            >
+              <img src={deleteIcon} alt="Delete icon" className="h-5 w-5" />
+            </Button>
+          </AlertDialogTrigger>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+              <AlertDialogDescription>
+                This action cannot be undone. This will permanently delete{" "}
+                <b>{noteName}</b> and remove it from our servers.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>Cancel</AlertDialogCancel>
+              <AlertDialogAction onClick={handleDelete}>
+                Continue
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
+        <Sheet>
+          <SheetTrigger asChild>
+            <Button
+              variant="noShadow"
+              size="sm"
+              className="hover:cursor-pointer"
+            >
+              <img
+                src={summarisationIcon}
+                alt="AI Summarisation Icon"
+                className="h-5 w-5"
+              />
+            </Button>
+          </SheetTrigger>
+          <SheetContent>
+            <SheetHeader>
+              <SheetTitle>Edit profile</SheetTitle>
+              <SheetDescription>
+                Make changes to your profile here. Click save when you&apos;re
                 done.
-              </DialogDescription>
-            </DialogHeader>
-            <div className="mb-3 grid gap-4">
+              </SheetDescription>
+            </SheetHeader>
+            <div className="grid flex-1 auto-rows-min gap-6 px-4">
               <div className="grid gap-3">
-                <Label htmlFor="name-1">New Notebook Name</Label>
-                <Input
-                  id="name-1"
-                  name="name"
-                  type="name"
-                  defaultValue={toUpdateNotebook.notebookname}
-                  onChange={handleNotebookNameChange}
-                  required
-                />
+                <Label htmlFor="sheet-demo-name">Name</Label>
+                <Input id="sheet-demo-name" defaultValue="Pedro Duarte" />
+              </div>
+              <div className="grid gap-3">
+                <Label htmlFor="sheet-demo-username">Username</Label>
+                <Input id="sheet-demo-username" defaultValue="@peduarte" />
               </div>
             </div>
-            <DialogFooter>
-              <DialogClose asChild>
-                <Button variant="neutral">Cancel</Button>
-              </DialogClose>
+            <SheetFooter>
               <Button type="submit">Save changes</Button>
-            </DialogFooter>
-          </form>
-        </DialogContent>
-      </Dialog>
-      <AlertDialog>
-        <AlertDialogTrigger asChild>
-          <Button variant="destructivenoShadow" size="sm">
-            <img src={deleteIcon} alt="Delete icon" className="h-5 w-5" />
-          </Button>
-        </AlertDialogTrigger>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
-            <AlertDialogDescription>
-              This action cannot be undone. This will permanently delete your
-              notebook and remove your data from our servers.
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction onClick={handleDelete}>
-              Continue
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
+              <SheetClose asChild>
+                <Button variant="neutral">Close</Button>
+              </SheetClose>
+            </SheetFooter>
+          </SheetContent>
+        </Sheet>
+      </div>
     </div>
   );
 }

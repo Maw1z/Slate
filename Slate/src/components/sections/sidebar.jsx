@@ -63,6 +63,7 @@ function Sidebar({
       />
       <NotesBar
         visibility={sidebarOpened}
+        update={update}
         selectedNotebookId={selectedNotebookId}
         selectedNoteId={selectedNoteId}
         onSelectNote={setSelectedNoteId}

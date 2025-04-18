@@ -4,6 +4,7 @@ import Sidebar from "./sections/sidebar";
 import { toast } from "sonner";
 import UtilBar from "./sections/utilBar";
 import Editor from "./sections/Editor";
+import Note from "./sections/Note";
 
 function Notes() {
   const [loading, setLoading] = useState(true);
@@ -54,13 +55,7 @@ function Notes() {
             handleUpdate={setUpdates}
           />
           <div className="h-full w-full bg-white">
-            {selectedNotebookId && (
-              <UtilBar
-                handleUpdate={setUpdates}
-                notebookID={selectedNotebookId}
-              />
-            )}
-            <Editor
+            <Note
               handleUpdate={setUpdates}
               selectedNotebookId={selectedNotebookId}
               selectedNoteId={selectedNoteId}

@@ -6,6 +6,7 @@ import addIcon from "../../assets/icons/add.svg";
 
 function NotesBar({
   visibility,
+  update,
   selectedNotebookId,
   selectedNoteId,
   onSelectNote,
@@ -34,7 +35,7 @@ function NotesBar({
       }
     };
     fetchNotes();
-  }, [selectedNotebookId]);
+  }, [selectedNotebookId, selectedNoteId, update]);
 
   const handleAddNote = async () => {
     try {
