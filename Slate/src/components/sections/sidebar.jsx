@@ -10,6 +10,8 @@ function Sidebar({
   handleLoad,
   selectedNotebookId,
   setSelectedNotebookId,
+  selectedNoteId,
+  setSelectedNoteId,
   update,
   handleUpdate,
 }) {
@@ -62,6 +64,8 @@ function Sidebar({
       <NotesBar
         visibility={sidebarOpened}
         selectedNotebookId={selectedNotebookId}
+        selectedNoteId={selectedNoteId}
+        onSelectNote={setSelectedNoteId}
         handleUpdate={handleUpdate}
       />
     </section>

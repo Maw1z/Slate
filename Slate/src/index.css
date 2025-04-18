@@ -1,66 +1,67 @@
 @import "tailwindcss";
 @import "tw-animate-css";
+@import "@mdxeditor/editor/style.css";
 @plugin 'tailwind-scrollbar';
 
 @font-face {
   font-family: "Lexend";
-  src: url("../src/assets/fonts/Lexend-Bold.ttf") format("truetype");
+  src: url("../public/fonts/Lexend-Bold.ttf") format("truetype");
   font-weight: bold;
   font-style: normal;
 }
 
 @font-face {
   font-family: "Lexend";
-  src: url("../src/assets/fonts/Lexend-Medium.ttf") format("truetype");
+  src: url("../public/fonts/Lexend-Medium.ttf") format("truetype");
   font-weight: 500;
   font-style: normal;
 }
 
 @font-face {
   font-family: "Lexend";
-  src: url("../src/assets/fonts/Lexend-Regular.ttf") format("truetype");
+  src: url("../public/fonts/Lexend-Regular.ttf") format("truetype");
   font-weight: normal;
   font-style: normal;
 }
 
 @font-face {
   font-family: "Lexend";
-  src: url("../src/assets/fonts/Lexend-Thin.ttf") format("truetype");
+  src: url("../public/fonts/Lexend-Thin.ttf") format("truetype");
   font-weight: 300;
   font-style: normal;
 }
 
 @font-face {
   font-family: "SpaceGrotesk";
-  src: url("../src/assets/fonts/SpaceGrotesk-Bold.ttf") format("truetype");
+  src: url("../public/fonts/SpaceGrotesk-Bold.ttf") format("truetype");
   font-weight: bold;
   font-style: normal;
 }
 
 @font-face {
   font-family: "SpaceGrotesk";
-  src: url("../src/assets/fonts/SpaceGrotesk-Light.ttf") format("truetype");
+  src: url("../public/fonts/SpaceGrotesk-Light.ttf") format("truetype");
   font-weight: 300;
   font-style: normal;
 }
 
 @font-face {
   font-family: "SpaceGrotesk";
-  src: url("../src/assets/fonts/SpaceGrotesk-Medium.ttf") format("truetype");
+  src: url("../public/fonts/SpaceGrotesk-Medium.ttf") format("truetype");
   font-weight: 500;
   font-style: normal;
 }
 
 @font-face {
   font-family: "SpaceGrotesk";
-  src: url("../src/assets/fonts/SpaceGrotesk-Regular.ttf") format("truetype");
+  src: url("../public/fonts/SpaceGrotesk-Regular.ttf") format("truetype");
   font-weight: normal;
   font-style: normal;
 }
 
 @font-face {
   font-family: "SpaceGrotesk";
-  src: url("../src/assets/fonts/SpaceGrotesk-SemiBold.ttf") format("truetype");
+  src: url("../public/fonts/SpaceGrotesk-SemiBold.ttf") format("truetype");
   font-weight: 600;
   font-style: normal;
 }
@@ -117,4 +118,65 @@ body {
   --shadow-shadow: var(--shadow);
   --font-weight-base: 500;
   --font-weight-heading: 700;
+}
+
+.mdxeditor,
+.mdxeditor .cm-editor {
+  font-family: "Lexend", sans-serif !important;
+}
+
+.mdxeditor h1 {
+  @apply mt-4 mb-2 text-4xl font-bold;
+}
+
+.mdxeditor h2 {
+  @apply mt-4 mb-2 text-3xl font-semibold;
+}
+
+.mdxeditor h3 {
+  @apply mt-3 mb-2 text-2xl font-semibold;
+}
+
+.mdxeditor h4 {
+  @apply mt-3 mb-2 text-xl font-medium;
+}
+
+.mdxeditor h5 {
+  @apply mt-2 mb-1 text-lg font-medium;
+}
+
+.mdxeditor h6 {
+  @apply mt-2 mb-1 text-base font-medium;
+}
+
+.mdxeditor p {
+  @apply mb-4 text-base leading-relaxed;
+}
+
+.mdxeditor blockquote {
+  @apply mt-4 mb-4 border-l-4 pl-4 text-gray-600 italic;
+}
+
+.mdxeditor pre {
+  @apply my-4 rounded-md bg-gray-800 p-4 text-white;
+}
+
+.mdxeditor code {
+  @apply rounded-sm bg-gray-100 px-1 text-gray-800;
+}
+
+.mdxeditor ul {
+  @apply mt-2 mb-4 list-disc pl-6;
+}
+
+.mdxeditor ol {
+  @apply mt-2 mb-4 list-decimal pl-6;
+}
+
+.mdxeditor li {
+  @apply mb-1;
+}
+
+.mdxeditor hr {
+  @apply my-4 border-t-2;
 }

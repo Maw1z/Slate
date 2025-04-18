@@ -4,7 +4,13 @@ import { v4 as uuidv4 } from "uuid";
 import { Skeleton } from "@/components/ui/skeleton";
 import addIcon from "../../assets/icons/add.svg";
 
-function NotesBar({ visibility, selectedNotebookId, handleUpdate }) {
+function NotesBar({
+  visibility,
+  selectedNotebookId,
+  selectedNoteId,
+  onSelectNote,
+  handleUpdate,
+}) {
   const [notes, setNotes] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -60,14 +66,19 @@ function NotesBar({ visibility, selectedNotebookId, handleUpdate }) {
             <img src={addIcon} alt="Plus" className="w-6" />
             Add Note
           </div>
-          {notes.map((note) => (
-            <button
-              key={note.noteid}
-              className="hover:bg-main focus:bg-main flex h-14 w-full items-center rounded-none border-b border-[#a3abbd] bg-white px-5 hover:cursor-pointer focus:border-2 focus:border-black focus:font-bold"
-            >
-              {loading ? <Skeleton className="h-4 w-36" /> : note.notename}
-            </button>
-          ))}
+          {notes.map((note) => {
+            const isSelected = selectedNoteId === note.noteid;
+
+            return (
+              <button
+                key={note.noteid}
+                className={`hover:bg-main flex h-14 w-full items-center rounded-none border-b border-[#a3abbd] px-5 hover:cursor-pointer ${isSelected ? "bg-main rounded-xs border-2 border-b-2 border-black border-b-black text-lg font-bold" : "bg-white"} `}
+                onClick={() => onSelectNote(note.noteid)}
+              >
+                {loading ? <Skeleton className="h-4 w-36" /> : note.notename}
+              </button>
+            );
+          })}
         </div>
       )}
     </>

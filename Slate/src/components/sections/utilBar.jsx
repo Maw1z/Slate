@@ -86,7 +86,7 @@ function UtilBar({ handleUpdate, notebookID }) {
   };
 
   return (
-    <div className="z-10 flex h-12 w-[100vw] items-center justify-center border-x border-b border-[#a3abbd] bg-white">
+    <div className="z-10 flex h-14 w-[100vw] items-center justify-center gap-2 border-x border-b border-[#a3abbd] bg-white">
       <Dialog>
         <DialogTrigger asChild>
           <Button variant="noShadow" size="sm">
