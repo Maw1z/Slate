@@ -2,8 +2,8 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 
-import { signInWithEmailAndPassword } from "firebase/auth";
-import { auth } from "../firebase";
+import { signInWithEmailAndPassword, signInWithPopup } from "firebase/auth";
+import { auth, provider } from "../firebase";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -45,15 +45,15 @@ function LoginPage() {
     }
   };
 
-  // const handleGoogleLogin = async () => {
-  //   try {
-  //     const result = await signInWithPopup(auth, provider);
-  //     const user = result.user;
-  //     console.log("Google user:", user);
-  //   } catch (error) {
-  //     console.error("Google login error:", error.message);
-  //   }
-  // };
+  const handleGoogleLogin = async () => {
+    try {
+      const result = await signInWithPopup(auth, provider);
+      const user = result.user;
+      console.log("Google user:", user);
+    } catch (error) {
+      console.error("Google login error:", error.message);
+    }
+  };
 
   const [formData, setFormData] = useState({ email: "", password: "" });
   const [loginSuccessfull, setLoginSuccessfull] = useState(false);
@@ -126,7 +126,11 @@ function LoginPage() {
                   <Button type="submit" className="mb-2 w-full">
                     Login
                   </Button>
-                  <Button variant="neutral" className="w-full">
+                  <Button
+                    variant="neutral"
+                    className="w-full"
+                    onClick={handleGoogleLogin}
+                  >
                     Login with Google
                   </Button>
                   <div className="mt-4 text-center text-sm">
