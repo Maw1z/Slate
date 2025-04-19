@@ -1,8 +1,8 @@
-import Header from "./Header";
-import CtaSection from "./sections/ctaSection";
-import FeaturesSections from "./sections/featuresSection";
-import ShortcutsSection from "./sections/shortcutsSection";
-import SecondCtaSection from "./sections/secondCtaSection";
+import Header from "./sections/HeaderLoggedOut";
+import CtaSection from "./sections/homepageComponents/ctaSection";
+import FeaturesSections from "./sections/homepageComponents/featuresSection";
+import ShortcutsSection from "./sections/homepageComponents/shortcutsSection";
+import SecondCtaSection from "./sections/homepageComponents/secondCtaSection";
 
 function HomePage() {
   return (

@@ -1,7 +1,7 @@
 import { ScrollArea } from "@/components/ui/scroll-area";
-import Autosaveicon from "../../assets/icons/autosave.svg";
-import SummariseIcon from "../../assets/icons/summarise.svg";
-import SyncIcon from "../../assets/icons/sync.svg";
+import Autosaveicon from "../../../assets/icons/autosave.svg";
+import SummariseIcon from "../../../assets/icons/summarise.svg";
+import SyncIcon from "../../../assets/icons/sync.svg";
 
 function featuresSections() {
   return (

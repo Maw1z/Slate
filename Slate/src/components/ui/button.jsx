@@ -30,8 +30,8 @@ const buttonVariants = cva(
         icon: "size-10",
       },
       textSize: {
-        sm: "text-xs", // small text size
-        md: "text-sm", // medium text size (default)
+        sm: "text-sm", // small text size
+        md: "text-md", // medium text size (default)
         lg: "text-lg", // large text size
         xl: "text-xl", // extra-large text size
       },
