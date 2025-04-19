@@ -7,10 +7,17 @@ import { useHotkeys } from "react-hotkeys-hook";
 function Note({ handleUpdate, selectedNotebookId, selectedNoteId }) {
   const [noteName, setNoteName] = useState("");
   const [markdownText, setMarkdownText] = useState("");
+  const [summary, setSummary] = useState("");
+  const [summaryLength, setSummaryLength] = useState("default");
   const editorRef = useRef(null);
 
   const handleNoteNameChange = (e) => {
     setNoteName(e.target.value);
+  };
+
+  const handleSummaryLengthChange = (value) => {
+    setSummaryLength(value);
+    console.log(value);
   };
 
   useHotkeys("ctrl+alt+s", (event) => {
@@ -38,6 +45,10 @@ function Note({ handleUpdate, selectedNotebookId, selectedNoteId }) {
     };
     fetchContent();
   }, [selectedNoteId]);
+
+  useEffect(() => {
+    handleSummary();
+  }, [summaryLength]);
 
   const handleSave = async () => {
     if (editorRef.current) {
@@ -77,6 +88,21 @@ function Note({ handleUpdate, selectedNotebookId, selectedNoteId }) {
     }
   };
 
+  const handleSummary = async () => {
+    if (!selectedNotebookId || !selectedNoteId) return;
+    console.log("t1");
+
+    try {
+      const res = await axios.get(
+        `http://localhost:8080/api/notes/notebooks/${selectedNotebookId}/${selectedNoteId}/summarise/${summaryLength}`,
+      );
+      console.log(res.data.summary);
+      setSummary(res.data.summary);
+    } catch (error) {
+      console.log("Error retrieving note:", error.message);
+    }
+  };
+
   return (
     <>
       <UtilBar
@@ -85,6 +111,9 @@ function Note({ handleUpdate, selectedNotebookId, selectedNoteId }) {
         handleSave={handleSave}
         handleDelete={handleDelete}
         setNewName={handleNoteNameChange}
+        summaryText={summary}
+        handleSummary={handleSummary}
+        handleSummaryLengthChange={handleSummaryLengthChange}
       />
       <Editor
         handleUpdate={handleUpdate}

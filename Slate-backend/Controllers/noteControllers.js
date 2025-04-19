@@ -1,3 +1,4 @@
+const axios = require("axios");
 const pool = require(".././db");
 
 // POST - Create note
@@ -108,10 +109,72 @@ const deleteNote = async (req, res) => {
   }
 };
 
+// GET - Summarise note
+const summariseNote = async (req, res) => {
+  const { notebookID, noteID, summaryLength } = req.params;
+
+  try {
+    const result = await pool.query(
+      "SELECT * FROM Notes WHERE NotebookID = $1 AND NoteID = $2",
+      [notebookID, noteID]
+    );
+    const noteContent = result.rows[0].notecontent;
+
+    if (result.rowCount === 0) {
+      return res.status(404).json({ error: "Note not found" });
+    }
+
+    if (!noteContent) {
+      return res.status(404).json({ error: "Note not found" });
+    }
+
+    let maxTokens;
+    if (summaryLength === "short") {
+      maxTokens = 150; // 100 words
+    } else if (summaryLength === "medium") {
+      maxTokens = 450; // 300 words
+    } else if (summaryLength === "detailed") {
+      maxTokens = 750; // 500 words
+    } else if (summaryLength === "default ") {
+      maxTokens = 300; // default summary length
+    }
+
+    const response = await axios.post(
+      "https://openrouter.ai/api/v1/chat/completions",
+      {
+        model: "mistralai/mixtral-8x7b-instruct",
+        messages: [
+          {
+            role: "system",
+            content:
+              "You are a helpful assistant that summarizes notes. You either write in markdown text or plain text",
+          },
+          { role: "user", content: `Summarize this:\n\n${noteContent}` },
+        ],
+        max_tokens: maxTokens,
+        temperature: 0.7,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${process.env.OPENROUTER_API_KEY}`,
+        },
+      }
+    );
+
+    const summary = response.data.choices[0].message.content;
+
+    res.json({ summary });
+  } catch (error) {
+    console.error("Error summarizing note:", error);
+    res.status(500).json({ error: "Failed to summarize note" });
+  }
+};
+
 module.exports = {
   createNote,
   getAllNote,
   getNote,
   updateNote,
   deleteNote,
+  summariseNote,
 };

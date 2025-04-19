@@ -6,6 +6,7 @@ const {
   getNote,
   updateNote,
   deleteNote,
+  summariseNote,
 } = require("../Controllers/noteControllers");
 
 // POST - Create note
@@ -22,5 +23,11 @@ router.put("/notebooks/:notebookID/:noteID", updateNote);
 
 // DELETE - Delete note
 router.delete("/notebooks/:notebookID/:noteID", deleteNote);
+
+// GET - Summarise note
+router.get(
+  "/notebooks/:notebookID/:noteID/summarise/:summaryLength",
+  summariseNote
+);
 
 module.exports = router;

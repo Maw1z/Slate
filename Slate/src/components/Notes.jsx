@@ -54,7 +54,7 @@ function Notes() {
             update={updates}
             handleUpdate={setUpdates}
           />
-          <div className="h-full w-full bg-white">
+          <div className="h-full w-full overflow-y-scroll bg-white">
             <Note
               handleUpdate={setUpdates}
               selectedNotebookId={selectedNotebookId}

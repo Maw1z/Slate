@@ -76,7 +76,13 @@ function NotesBar({
                 className={`hover:bg-main flex h-14 w-full items-center rounded-none border-b border-[#a3abbd] px-5 hover:cursor-pointer ${isSelected ? "bg-main rounded-xs border-2 border-b-2 border-black border-b-black text-lg font-bold" : "bg-white"} `}
                 onClick={() => onSelectNote(note.noteid)}
               >
-                {loading ? <Skeleton className="h-4 w-36" /> : note.notename}
+                {loading ? (
+                  <Skeleton className="h-4 w-36" />
+                ) : (
+                  <span className="w-full truncate overflow-hidden text-left whitespace-nowrap">
+                    {note.notename}
+                  </span>
+                )}
               </button>
             );
           })}
