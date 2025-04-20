@@ -58,7 +58,6 @@ import {
 
 import logo from "../../assets/logo.svg";
 import shortcutIcon from "../../assets/icons/shortcuts.svg";
-import profileIcon from "../../assets/icons/profile.svg";
 
 function HeaderLoggedIn({ user }) {
   const navigate = useNavigate();
@@ -333,7 +332,6 @@ function HeaderLoggedIn({ user }) {
         <DropdownMenu>
           <DropdownMenuTrigger asChild className="mt-1">
             <Avatar className="h-9 w-9 hover:cursor-pointer">
-              <AvatarImage src="" alt="@shadcn" />
               <AvatarFallback>{getUserFirstLetter()}</AvatarFallback>
             </Avatar>
           </DropdownMenuTrigger>
