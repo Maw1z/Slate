@@ -14,7 +14,7 @@ function shortcutsSection() {
             experience.
           </p>
         </div>
-        <div className="mx-auto flex h-[675px] w-3/4 items-center justify-center border">
+        <div className="mx-auto flex h-[675px] w-3/4 items-center justify-center">
           <img src={shortcutsImage} className="h-full" />
         </div>
       </div>
