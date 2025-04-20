@@ -19,6 +19,8 @@ import { Label } from "@/components/ui/label";
 import { CheckCircle2Icon, AlertCircleIcon } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
+import googleIcon from "../assets/icons/googleicon.svg";
+
 function LoginPage() {
   const navigate = useNavigate();
 
@@ -131,6 +133,11 @@ function LoginPage() {
                     className="w-full"
                     onClick={handleGoogleLogin}
                   >
+                    <img
+                      src={googleIcon}
+                      alt="Google icon"
+                      className="h-5 w-5"
+                    />
                     Login with Google
                   </Button>
                   <div className="mt-4 text-center text-sm">

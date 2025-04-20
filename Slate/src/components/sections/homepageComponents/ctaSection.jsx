@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
+import ctaImage from "../../../assets/ctaImage.png";
 
 function ctaSection() {
   return (
@@ -21,7 +22,9 @@ function ctaSection() {
           </Link>
         </div>
         {/* Image div */}
-        <div className="h-full w-1/2 border"></div>
+        <div className="flex h-full w-3/4 items-center justify-between">
+          <img src={ctaImage} />
+        </div>
       </div>
     </section>
   );

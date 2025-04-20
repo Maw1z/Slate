@@ -1,3 +1,5 @@
+import shortcutsImage from "../../../assets/shortcutsImage.png";
+
 function shortcutsSection() {
   return (
     <section className="bg-background font-Lex w-screen py-20">
@@ -12,7 +14,9 @@ function shortcutsSection() {
             experience.
           </p>
         </div>
-        <div className="mx-auto h-[400px] w-3/4 border"></div>
+        <div className="mx-auto flex h-[675px] w-3/4 items-center justify-center border">
+          <img src={shortcutsImage} className="h-full" />
+        </div>
       </div>
     </section>
   );
