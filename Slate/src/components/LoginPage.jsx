@@ -32,7 +32,7 @@ function LoginPage() {
       console.log("User logged in:", userCredential.user);
       setLoginSuccessfull(true);
       setTimeout(() => {
-        navigate("/");
+        navigate("/notes");
       }, 3000);
     } catch (error) {
       if (error.code === "auth/invalid-credential") {
@@ -149,9 +149,9 @@ function LoginPage() {
         <div className="absolute inset-0 z-10 flex w-1/4 items-center justify-center self-center justify-self-center">
           <Alert>
             <CheckCircle2Icon />
-            <AlertTitle>Success! Your account has been created</AlertTitle>
+            <AlertTitle>Success! You have been logged in</AlertTitle>
             <AlertDescription>
-              You will be shortly redirected to the homepage
+              You will be shortly redirected to the notes page
             </AlertDescription>
           </Alert>
         </div>

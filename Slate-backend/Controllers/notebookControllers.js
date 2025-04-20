@@ -2,12 +2,14 @@ const pool = require(".././db");
 
 // POST - Create notebook
 const createNotebook = async (req, res) => {
+  const uid = req.uid;
+
   try {
-    const { NotebookID, UserID, notebookName } = req.body;
+    const { NotebookID, notebookName } = req.body;
 
     const newNotebook = await pool.query(
       "INSERT INTO Notebooks (NotebookID, UserID, notebookName) VALUES($1, $2, $3) RETURNING *",
-      [NotebookID, UserID, notebookName]
+      [NotebookID, uid, notebookName]
     );
     res.status(201).json({
       message: "Notebook created successfully",
@@ -21,8 +23,13 @@ const createNotebook = async (req, res) => {
 
 // GET - Get all notebooks
 const getAllNotebook = async (req, res) => {
+  const uid = req.uid;
+
   try {
-    const notebooks = await pool.query("SELECT * FROM Notebooks");
+    const notebooks = await pool.query(
+      "SELECT * FROM Notebooks WHERE userid = $1",
+      [uid]
+    );
 
     if (notebooks.rows.length === 0) {
       return res.status(404).json({ message: "No notebooks found" });

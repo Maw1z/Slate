@@ -31,12 +31,14 @@ import deleteIcon from "../../assets/icons/delete.svg";
 import editIcon from "../../assets/icons/edit.svg";
 
 function NotebooksBar({
+  user,
   visibility,
   loading,
   notebooks,
   selectedNotebookId,
   onSelectNotebook,
   handleUpdate,
+  getUserToken,
 }) {
   const [newNotebookName, setNewNotebookName] = useState(null);
   const [toUpdateNotebook, setToUpdateNotebook] = useState({});
@@ -60,25 +62,40 @@ function NotebooksBar({
 
     const fetchSpecificNotebook = async () => {
       try {
+        const token = await getUserToken();
+
         const res = await axios.get(
           `http://localhost:8080/api/notebooks/${selectedNotebookId}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          },
         );
         setToUpdateNotebook(res.data.notebook);
       } catch (error) {
         console.log("Error fetching notebook", error.message);
       }
     };
-    fetchSpecificNotebook();
-  }, [selectedNotebookId]);
+    if (user) fetchSpecificNotebook();
+  }, [selectedNotebookId, user]);
 
   const handleAddNotebook = async () => {
     try {
-      const res = await axios.post("http://localhost:8080/api/notebooks/", {
-        NotebookID: generateUUID(),
-        // TODO: Add firebase uid here
-        UserID: "345",
-        notebookName: newNotebookName,
-      });
+      const token = await getUserToken();
+
+      const res = await axios.post(
+        "http://localhost:8080/api/notebooks/",
+        {
+          NotebookID: generateUUID(),
+          notebookName: newNotebookName,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      );
       console.log("Notebook created:", res.data);
       handleUpdate({ message: "Notebook created!" });
     } catch (error) {
@@ -181,7 +198,9 @@ function NotebooksBar({
                 {loading ? (
                   <Skeleton className="h-4 w-36" />
                 ) : (
-                  book.notebookname
+                  <span className="w-full truncate overflow-hidden text-left whitespace-nowrap">
+                    {book.notebookname}
+                  </span>
                 )}
               </button>
             );

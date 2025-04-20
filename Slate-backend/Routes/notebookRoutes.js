@@ -1,5 +1,6 @@
 const express = require("express");
 const router = express.Router();
+const verifyToken = require("../Middleware/verifyToken");
 const {
   createNotebook,
   getAllNotebook,
@@ -9,10 +10,10 @@ const {
 } = require("../Controllers/notebookControllers");
 
 // POST - Create notebook
-router.post("/", createNotebook);
+router.post("/", verifyToken, createNotebook);
 
 // GET - Get all notebooks
-router.get("/", getAllNotebook);
+router.get("/", verifyToken, getAllNotebook);
 
 // GET - Get notebook from id
 router.get("/:notebookID", getNotebook);

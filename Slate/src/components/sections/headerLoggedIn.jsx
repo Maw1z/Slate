@@ -1,5 +1,7 @@
 import { Button } from "../ui/button";
-import { Link } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
+import { signOut } from "firebase/auth";
+import { auth } from "../../firebase";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   Cloud,
@@ -56,8 +58,29 @@ import {
 
 import logo from "../../assets/logo.svg";
 import shortcutIcon from "../../assets/icons/shortcuts.svg";
+import profileIcon from "../../assets/icons/profile.svg";
 
-function HeaderLoggedIn() {
+function HeaderLoggedIn({ user }) {
+  const navigate = useNavigate();
+
+  const handleLogout = async () => {
+    try {
+      await signOut(auth);
+      console.log("User signed out");
+      navigate("/");
+    } catch (error) {
+      console.error("Error signing out:", error);
+    }
+  };
+
+  const getUserFirstLetter = () => {
+    if (!user) return;
+
+    if (user.displayName) return user.displayName[0].toUpperCase();
+
+    return user.email[0].toUpperCase();
+  };
+
   return (
     <header className="sticky top-0 z-10 flex h-[70px] w-screen items-center justify-between border-b-4 bg-white p-10 px-14">
       <div className="flex items-center justify-between gap-2">
@@ -307,13 +330,11 @@ function HeaderLoggedIn() {
             </div>
           </DialogContent>
         </Dialog>
-
-        {/* Profile */}
         <DropdownMenu>
-          <DropdownMenuTrigger asChild>
+          <DropdownMenuTrigger asChild className="mt-1">
             <Avatar className="h-9 w-9 hover:cursor-pointer">
-              <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
-              <AvatarFallback>CN</AvatarFallback>
+              <AvatarImage src="" alt="@shadcn" />
+              <AvatarFallback>{getUserFirstLetter()}</AvatarFallback>
             </Avatar>
           </DropdownMenuTrigger>
           <DropdownMenuContent className="w-56">
@@ -323,77 +344,23 @@ function HeaderLoggedIn() {
               <DropdownMenuItem>
                 <User />
                 <span>Profile</span>
-                <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>
-              </DropdownMenuItem>
-              <DropdownMenuItem>
-                <CreditCard />
-                <span>Billing</span>
-                <DropdownMenuShortcut>⌘B</DropdownMenuShortcut>
               </DropdownMenuItem>
               <DropdownMenuItem>
                 <Settings />
                 <span>Settings</span>
-                <DropdownMenuShortcut>⌘S</DropdownMenuShortcut>
-              </DropdownMenuItem>
-              <DropdownMenuItem>
-                <Keyboard />
-                <span>Keyboard shortcuts</span>
-                <DropdownMenuShortcut>⌘K</DropdownMenuShortcut>
-              </DropdownMenuItem>
-            </DropdownMenuGroup>
-            <DropdownMenuSeparator />
-            <DropdownMenuGroup>
-              <DropdownMenuItem>
-                <Users />
-                <span>Team</span>
-              </DropdownMenuItem>
-              <DropdownMenuSub>
-                <DropdownMenuSubTrigger>
-                  <UserPlus />
-                  <span>Invite users</span>
-                </DropdownMenuSubTrigger>
-                <DropdownMenuPortal>
-                  <DropdownMenuSubContent>
-                    <DropdownMenuItem>
-                      <Mail />
-                      <span>Email</span>
-                    </DropdownMenuItem>
-                    <DropdownMenuItem>
-                      <MessageSquare />
-                      <span>Message</span>
-                    </DropdownMenuItem>
-                    <DropdownMenuSeparator />
-                    <DropdownMenuItem>
-                      <PlusCircle />
-                      <span>More...</span>
-                    </DropdownMenuItem>
-                  </DropdownMenuSubContent>
-                </DropdownMenuPortal>
-              </DropdownMenuSub>
-              <DropdownMenuItem>
-                <Plus />
-                <span>New Team</span>
-                <DropdownMenuShortcut>⌘+T</DropdownMenuShortcut>
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
             <DropdownMenuItem>
               <Github />
-              <span>GitHub</span>
-            </DropdownMenuItem>
-            <DropdownMenuItem>
-              <LifeBuoy />
-              <span>Support</span>
-            </DropdownMenuItem>
-            <DropdownMenuItem disabled>
-              <Cloud />
-              <span>API</span>
+              <Link to="https://github.com/Maw1z/Slate" target="_blank">
+                <span>GitHub</span>
+              </Link>
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>
+            <DropdownMenuItem onClick={handleLogout}>
               <LogOut />
               <span>Log out</span>
-              <DropdownMenuShortcut>⇧⌘Q</DropdownMenuShortcut>
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

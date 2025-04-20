@@ -1,11 +1,13 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
+import { getIdToken } from "firebase/auth";
 import NotebooksBar from "./notebooksBar";
 import NotesBar from "./notesBar";
 import booksOpenIcon from "../../assets/icons/books-open.svg";
 import booksClosedIcon from "../../assets/icons/books-closed.svg";
 
 function Sidebar({
+  user,
   loadStatus,
   handleLoad,
   selectedNotebookId,
@@ -22,10 +24,27 @@ function Sidebar({
     setSideBarOpened(!sidebarOpened);
   };
 
+  const getUserToken = async () => {
+    if (!user) return;
+
+    try {
+      const idToken = await getIdToken(user);
+      return idToken;
+    } catch (error) {
+      console.log("Error", error);
+    }
+  };
+
   useEffect(() => {
     const fetchNotebooks = async () => {
       try {
-        const res = await axios.get("http://localhost:8080/api/notebooks");
+        const token = await getUserToken();
+
+        const res = await axios.get("http://localhost:8080/api/notebooks", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
         setNotebooks(res.data.notebook);
         handleLoad(false);
 
@@ -36,8 +55,8 @@ function Sidebar({
         console.log("Error fetching notebooks:", error.message);
       }
     };
-    fetchNotebooks();
-  }, [update]);
+    if (user) fetchNotebooks();
+  }, [update, user]);
 
   return (
     <section className="flex flex-1">
@@ -54,12 +73,14 @@ function Sidebar({
         </div>
       </div>
       <NotebooksBar
+        user={user}
         visibility={sidebarOpened}
         loading={loadStatus}
         notebooks={notebooks}
         selectedNotebookId={selectedNotebookId}
         onSelectNotebook={setSelectedNotebookId}
         handleUpdate={handleUpdate}
+        getUserToken={getUserToken}
       />
       <NotesBar
         visibility={sidebarOpened}
